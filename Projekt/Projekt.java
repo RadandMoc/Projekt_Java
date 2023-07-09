@@ -14,7 +14,23 @@ public class Projekt {
         //System.out.println(suma(1.56, 2, 3, 4, 5));
         System.out.println(CharToInt(' '));
     }
-
+/* Mechanika zdefiniowania znaku:
+ * 1 jeżeli znak jest przez nas zdefiniowany to jest tam int odpowiadający znakowi z naszego słownika
+ * 2 jeśli znak nie jest przez nas zdefiniowany to w jego miejscu jest 0 a następna liczba jest intem z kodu ascii odpowiadającym temu znakowi
+ * 
+ * 
+ * przykład:
+ * 
+ * nasz słownik:
+ * A-1
+ * B-2
+ * 
+ * ascii:
+ * C-5
+ * D-6
+ * 
+ * [A][D][B][C][C] = [1][0][6][2][0][5][0][5]
+*/
     public static int CharToInt(char letter)
     {
         if(Character.isLetter(letter)){
