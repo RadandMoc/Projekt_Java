@@ -5,12 +5,14 @@ import java.util.List;
 public class Projekt {
     public static void main(String[] args) {
         String tekst = "Wielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
-        int[] output = TextToInts(tekst);
-
+        int[] text = TextToInts(tekst);
+        String password = "W dupie trzasło";
+        int[] passwordInInt = TextToInts(password);
+        System.out.print(IntsToString(VernamDecrypting(VernamEncryption(text, passwordInInt),passwordInInt)));
         /*for (int value : output) {
             System.out.print(value + " ");
         }*/
-        System.out.println(IntsToString(output));
+        //System.out.println(IntsToString(output));
         //System.out.println(CharToInt(' '));
     }
 
@@ -564,6 +566,48 @@ public class Projekt {
         }
         return another;
     }
+
+
+    public static int[] Vernam(int[] text, int[] password, bool wantDecrypt)
+    {
+        if(wantDecrypt)
+        {
+            return VernamDecrypting(text, password);
+        }
+        else
+        {
+            return VernamEncryption(text, password);
+        }
+    }
+
+    public static int[] VernamEncryption(int[] text, int[] password)
+    {
+        int textLength = text.length;
+        int[] returner = new int[textLength];
+        int passwordLength = password.length;
+        for (int i = 0; i < textLength; i++)
+        {
+            returner[i] = ((text[i] + password[i%passwordLength])%256);
+        }
+        return returner;
+    }
+
+    public static int[] VernamDecrypting(int[] text, int[] password)
+    {
+        int textLength = text.length;
+        int[] returner = new int[textLength];
+        int passwordLength = password.length;
+        for (int i = 0; i < textLength; i++)
+        {
+            returner[i] = (text[i] - password[i%passwordLength]);
+            if(returner[i]<0)
+            {
+                returner[i] = returner[i] * (-1);
+            }
+        }
+        return returner;
+    }
+
 
     public static void Solenie(String[] args)
     {
