@@ -1,7 +1,10 @@
 package Projekt;
 
+import java.util.List;
+
 public class Projekt {
     public static void main(String[] args) {
+        String tekst = "Wielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
         //Zad1
         //Totek(args);
         //Zad2
@@ -12,7 +15,12 @@ public class Projekt {
         //odwróć(args);
         //Zad5
         //System.out.println(suma(1.56, 2, 3, 4, 5));
-        System.out.println(CharToInt(' '));
+        int[] output = TextToInts(tekst);
+
+        for (int value : output) {
+            System.out.print(value + " ");
+        }
+        //System.out.println(CharToInt(' '));
     }
 /* Mechanika zdefiniowania znaku:
  * 1 jeżeli znak jest przez nas zdefiniowany to jest tam int odpowiadający znakowi z naszego słownika
@@ -31,6 +39,42 @@ public class Projekt {
  * 
  * [A][D][B][C][C] = [1][0][6][2][0][5][0][5]
 */
+    public static int[] TextToInts(String text)
+    {
+        int textLength = text.length();
+        int[] secret = new int[textLength*2];
+        int sizeOfTable = textLength;
+        
+        for (int i = 0; i < textLength*2; i++) {
+            secret[i] = CharToInt(text.charAt((i)/2));
+            i++;
+            secret[i] = (int) text.charAt((i)/2);
+            if(secret[i-1]==0)
+            {
+                sizeOfTable++;
+            }
+        }
+
+        int[] returner = new int[sizeOfTable];
+        int assitant = 0;
+        for (int i = 0; i < sizeOfTable; i++)
+        {
+            if(secret[i]==0)
+            {
+                returner[i] = 0;
+                i++;
+                assitant++;
+                returner[i] = secret[assitant];
+                assitant++;
+            }
+            else
+            {
+                returner[i] = secret[assitant];
+                assitant += 2;
+            }
+        }
+        return returner;
+    }
     public static int CharToInt(char letter)
     {
         if(Character.isLetter(letter)){
