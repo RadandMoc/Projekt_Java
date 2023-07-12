@@ -5,23 +5,16 @@ import java.util.List;
 public class Projekt {
     public static void main(String[] args) {
         String tekst = "Wielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
-        //Zad1
-        //Totek(args);
-        //Zad2
-        //Odwrotna(args);
-        //Zad3
-        //ileRazy(args);
-        //Zad4
-        //odwróć(args);
-        //Zad5
-        //System.out.println(suma(1.56, 2, 3, 4, 5));
         int[] output = TextToInts(tekst);
 
-        for (int value : output) {
+        /*for (int value : output) {
             System.out.print(value + " ");
-        }
+        }*/
+        System.out.println(IntsToString(output));
         //System.out.println(CharToInt(' '));
     }
+
+
 /* Mechanika zdefiniowania znaku:
  * 1 jeżeli znak jest przez nas zdefiniowany to jest tam int odpowiadający znakowi z naszego słownika
  * 2 jeśli znak nie jest przez nas zdefiniowany to w jego miejscu jest 0 a następna liczba jest intem z kodu ascii odpowiadającym temu znakowi
@@ -75,6 +68,35 @@ public class Projekt {
         }
         return returner;
     }
+
+    public static String IntsToString(int[] textInInts)
+    {
+        int textLength2 = textInInts.length;
+        int textLength = textLength2--;
+        int assistant;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < textLength; i++)
+        {
+            if(i==textLength2)
+            {
+                sb.append(IntToChar(textInInts[i], (char)0));
+            }
+            else
+            {
+                assistant = textInInts[i];
+                i++;
+                sb.append(IntToChar(assistant, (char) textInInts[i]));
+                i--;
+            }
+            if(textInInts[i]==0)
+            {
+                i++;
+            }
+        }
+        return sb.toString();
+    }
+
+
     public static int CharToInt(char letter)
     {
         if(Character.isLetter(letter)){
@@ -268,7 +290,7 @@ public class Projekt {
         } else if(letter == '['){
             return 92;
         } else if(letter == ']'){
-            return 82;
+            return 98;
         } else if(letter == '/'){
             return 94;
         } else if(letter == '*'){
@@ -501,7 +523,7 @@ public class Projekt {
             return '}';
         } else if(number == 92){
             return '[';
-        } else if(number == 82){
+        } else if(number == 98){
             return ']';
         } else if(number == 94){
             return '/';
