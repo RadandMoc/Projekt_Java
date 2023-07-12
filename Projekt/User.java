@@ -10,7 +10,11 @@ public class User {
     private String email;
     private HashSet<User> contactList;
 
-    public User(String login) {
+    public User(int userId,String login,String password,String email) {
+        this.userId=userId;
         this.login = login;
+        this.password = password;
+        this.email = email;
+        contactList=new HashSet<User>();
     }
 }
