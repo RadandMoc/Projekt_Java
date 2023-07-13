@@ -17,4 +17,28 @@ public class User {
         this.email = email;
         contactList=new HashSet<User>();
     }
+
+    @Override
+    public String toString() {
+        return userId+login+password+email;
+    }
+
+    public String getUserLogin()
+    {
+        return login;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void AddContact(User u)
+    {
+        contactList.add(u);
+    }
+    public HashSet<User> getContactList()
+    {
+        return contactList;
+    }
 }

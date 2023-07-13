@@ -1,18 +1,16 @@
 package Projekt;
 
+import java.util.ArrayList;
+
 public class Message {
-    String content;
-    String key;
+    ArrayList<String> content;
+
 
     public Message()
     {
-
+        content=new ArrayList<>();
     }
 
-    public Message(String content,String key)
-    {
-        this.content=content;
-        this.key=key;
-    }
+
 
 }
