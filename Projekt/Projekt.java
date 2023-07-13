@@ -1,14 +1,20 @@
-package Projekt;
+//package Projekt;
 
 import java.util.List;
+import java.util.Queue;
+import java.util.Random;
+import java.util.LinkedList;
 
 public class Projekt {
     public static void main(String[] args) {
-        String tekst = "Wielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
-        int[] text = TextToInts(tekst);
+        String tekst = "qWielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
+        short[] text = TextToInts(tekst);
         String password = "W dupie trzasło";
-        int[] passwordInInt = TextToInts(password);
-        System.out.print(IntsToString(VernamDecrypting(VernamEncryption(text, passwordInInt),passwordInInt)));
+        short[] passwordInInt = TextToInts(password);
+        short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
+        zaszyfrowane = Salting(zaszyfrowane, passwordInInt);
+        zaszyfrowane = Desalting(zaszyfrowane, passwordInInt);
+        System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));
         /*for (int value : output) {
             System.out.print(value + " ");
         }*/
@@ -34,23 +40,23 @@ public class Projekt {
  * 
  * [A][D][B][C][C] = [1][0][6][2][0][5][0][5]
 */
-    public static int[] TextToInts(String text)
+    public static short[] TextToInts(String text)
     {
         int textLength = text.length();
-        int[] secret = new int[textLength*2];
+        short[] secret = new short[textLength*2];
         int sizeOfTable = textLength;
         
         for (int i = 0; i < textLength*2; i++) {
             secret[i] = CharToInt(text.charAt((i)/2));
             i++;
-            secret[i] = (int) text.charAt((i)/2);
+            secret[i] = (short) text.charAt((i)/2);
             if(secret[i-1]==0)
             {
                 sizeOfTable++;
             }
         }
 
-        int[] returner = new int[sizeOfTable];
+        short[] returner = new short[sizeOfTable];
         int assitant = 0;
         for (int i = 0; i < sizeOfTable; i++)
         {
@@ -71,11 +77,11 @@ public class Projekt {
         return returner;
     }
 
-    public static String IntsToString(int[] textInInts)
+    public static String IntsToString(short[] textInInts)
     {
         int textLength2 = textInInts.length;
         int textLength = textLength2--;
-        int assistant;
+        short assistant;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < textLength; i++)
         {
@@ -99,7 +105,7 @@ public class Projekt {
     }
 
 
-    public static int CharToInt(char letter)
+    public static short CharToInt(char letter)
     {
         if(Character.isLetter(letter)){
             //Tutaj są tlyko litery
@@ -333,7 +339,7 @@ public class Projekt {
         return 0;
     }
 
-    public static char IntToChar(int number, char another)
+    public static char IntToChar(short number, char another)
     {
         if(number > 0 && number < 71){
             //Tutaj są tlyko litery
@@ -568,7 +574,7 @@ public class Projekt {
     }
 
 
-    public static int[] Vernam(int[] text, int[] password, bool wantDecrypt)
+    public static short[] Vernam(short[] text, short[] password, boolean wantDecrypt)
     {
         if(wantDecrypt)
         {
@@ -580,37 +586,164 @@ public class Projekt {
         }
     }
 
-    public static int[] VernamEncryption(int[] text, int[] password)
+    public static short[] VernamEncryption(short[] text, short[] password)
     {
         int textLength = text.length;
-        int[] returner = new int[textLength];
+        short[] returner = new short[textLength];
         int passwordLength = password.length;
         for (int i = 0; i < textLength; i++)
         {
-            returner[i] = ((text[i] + password[i%passwordLength])%256);
+            returner[i] = (short)((text[i] + password[i%passwordLength])%256);
         }
         return returner;
     }
 
-    public static int[] VernamDecrypting(int[] text, int[] password)
+    public static short[] VernamDecrypting(short[] text, short[] password)
     {
         int textLength = text.length;
-        int[] returner = new int[textLength];
+        short[] returner = new short[textLength];
         int passwordLength = password.length;
         for (int i = 0; i < textLength; i++)
         {
-            returner[i] = (text[i] - password[i%passwordLength]);
+            returner[i] = (short)(text[i] - password[i%passwordLength]);
             if(returner[i]<0)
             {
-                returner[i] = returner[i] * (-1);
+                returner[i] = (short)(returner[i] * (-1));
             }
         }
         return returner;
     }
 
-
-    public static void Solenie(String[] args)
+/*
+ * Schemat solenia:
+ * 
+ * 1 Sprawdzenie czy solona tresc jest wystarczajaco duza zeby bylo to z sensem (24 liczb)
+ * 
+ */
+    public static short[] Salting(short[] text, short[] password)
     {
+        int textLength = text.length;
+        if(textLength<24)
+        {
+            return text;
+        }
+        else
+        {
+            short A = text[0];
+            Short B = password[1];
+            short C = text[2];
+            short G;
+            short H = password[password.length - 1];
+            int I;
+            short howFarIsSalt = 0;
+            int numberOfSalts=1;
+            Queue<Short> qreturner = new LinkedList<>();
+            qreturner.offer(A);
+            if((A%2)==0)
+            {
+                qreturner.offer(RandomCharSize());
+                qreturner.offer(text[1]);
+            } 
+            else
+            {
+                qreturner.offer(text[1]);
+                qreturner.offer(RandomCharSize());
+            }
+            for (int i = 3; i < (((A^2)*B+C)%20) -1; i++)
+            {
+                qreturner.offer(text[i-1]);
+            }
+            while(textLength+numberOfSalts>qreturner.size()-1)
+            {
+                if(howFarIsSalt == 0)
+                {    
+                    G=RandomCharSize(); //wartosc ostatniej soli szyfrujacej
+                    I=qreturner.size(); //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
+                    qreturner.offer(G);
+                    howFarIsSalt = (short)(((G^2) + (H*I) + B)%356);
+                    numberOfSalts++;
+                }
+                else
+                {
+                    howFarIsSalt--;
+                    qreturner.offer(text[qreturner.size()-numberOfSalts]);
+                }
+            }
+            short[] returner = new short[qreturner.size()];
 
+            // Przepisywanie elementów z kolejki do tabeli
+            int index = 0;
+            while (!qreturner.isEmpty()) {
+                returner[index] = qreturner.poll();
+                index++;
+            }
+
+            return returner;
+        }
+    }
+
+    public static short[] Desalting(short[] text, short[] password)
+    {
+        int textLength = text.length;
+        if(textLength<24)
+        {
+            return text;
+        }
+        else
+        {
+            short A = text[0];
+            Short B = password[1];
+            short C = text[3];
+            short G;
+            short H = password[password.length - 1];
+            int I;
+            short howFarIsSalt = 0;
+            int numberOfSalts=1;
+            Queue<Short> qreturner = new LinkedList<>();
+            qreturner.offer(A);
+            if((A%2)==0)
+            {
+                qreturner.offer(text[2]);
+            } 
+            else
+            {
+                qreturner.offer(text[1]);
+            }
+            for (int i = 3; i < (((A^2)*B+C)%20) -1; i++)
+            {
+                qreturner.offer(text[i]);
+            }
+            while(textLength-numberOfSalts>qreturner.size()-1)
+            {
+                if(howFarIsSalt == 0)
+                {    
+                    G=text[qreturner.size()+numberOfSalts]; //wartosc ostatniej soli szyfrujacej
+                    I=qreturner.size()+numberOfSalts; //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
+                    howFarIsSalt = (short)(((G^2) + (H*I) + B)%356);
+                    numberOfSalts++;
+                }
+                else
+                {
+                    howFarIsSalt--;
+                    qreturner.offer(text[qreturner.size()+numberOfSalts]);
+                }
+            }
+            short[] returner = new short[qreturner.size()];
+
+            // Przepisywanie elementów z kolejki do tabeli
+            int index = 0;
+            while (!qreturner.isEmpty()) {
+                returner[index] = qreturner.poll();
+                index++;
+            }
+
+            return returner;
+        }
+    }
+
+    public static short RandomCharSize()
+    {
+        Random random = new Random();
+        return (short)random.nextInt(256);
     }
 }
