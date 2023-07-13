@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class Projekt {
     public static void main(String[] args) {
-        String tekst = "qWielki test Tegoż gó*óównaaaaa kurła+jego+mać w-tą i_na z4d";
+        String tekst = "1234567890qwertyuiopasdfg";
         short[] text = TextToInts(tekst);
         String password = "W dupie trzasło";
         short[] passwordInInt = TextToInts(password);
@@ -618,7 +618,7 @@ public class Projekt {
  * Schemat solenia:
  * 
  * 1 Sprawdzenie czy solona tresc jest wystarczajaco duza zeby bylo to z sensem (24 liczb)
- * 
+ * Patrz na miro
  */
     public static short[] Salting(short[] text, short[] password)
     {
@@ -633,9 +633,9 @@ public class Projekt {
             Short B = password[1];
             short C = text[2];
             short G;
-            short H = password[password.length - 1];
+            short H = password[password.length - 2];
             int I;
-            short howFarIsSalt = 0;
+            short howFarIsSalt;
             int numberOfSalts=1;
             Queue<Short> qreturner = new LinkedList<>();
             qreturner.offer(A);
@@ -649,18 +649,15 @@ public class Projekt {
                 qreturner.offer(text[1]);
                 qreturner.offer(RandomCharSize());
             }
-            for (int i = 3; i < (((A^2)*B+C)%20) -1; i++)
-            {
-                qreturner.offer(text[i-1]);
-            }
-            while(textLength+numberOfSalts>qreturner.size()-1)
+            howFarIsSalt = (short)(((Math.pow(A, 2))*B+C)%20 +1);
+            while(textLength+numberOfSalts>qreturner.size())
             {
                 if(howFarIsSalt == 0)
                 {    
                     G=RandomCharSize(); //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size(); //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
                     qreturner.offer(G);
-                    howFarIsSalt = (short)(((G^2) + (H*I) + B)%356);
+                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%356);
                     numberOfSalts++;
                 }
                 else
@@ -695,9 +692,9 @@ public class Projekt {
             Short B = password[1];
             short C = text[3];
             short G;
-            short H = password[password.length - 1];
+            short H = password[password.length - 2];
             int I;
-            short howFarIsSalt = 0;
+            short howFarIsSalt;
             int numberOfSalts=1;
             Queue<Short> qreturner = new LinkedList<>();
             qreturner.offer(A);
@@ -709,17 +706,14 @@ public class Projekt {
             {
                 qreturner.offer(text[1]);
             }
-            for (int i = 3; i < (((A^2)*B+C)%20) -1; i++)
-            {
-                qreturner.offer(text[i]);
-            }
-            while(textLength-numberOfSalts>qreturner.size()-1)
+            howFarIsSalt = (short)(((Math.pow(A, 2))*B+C)%20 +1);
+            while(textLength-numberOfSalts>qreturner.size())
             {
                 if(howFarIsSalt == 0)
                 {    
                     G=text[qreturner.size()+numberOfSalts]; //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size()+numberOfSalts; //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
-                    howFarIsSalt = (short)(((G^2) + (H*I) + B)%356);
+                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%356);
                     numberOfSalts++;
                 }
                 else
