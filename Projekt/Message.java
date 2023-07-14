@@ -3,13 +3,13 @@ package Projekt;
 import java.util.Date;
 
 public class Message {
-    private String content;
+    private short[] content;
     private Date date;
     private boolean isOutgoing;
     private String key;
 
 
-    public Message(String content,Date date)
+    public Message(short[] content,Date date)
     {
         this.content=content;
         this.date=date;
@@ -41,7 +41,7 @@ public class Message {
         isOutgoing=false;
     }
 
-    public String getContent()
+    public short[] getContent()
     {
         return content;
     }

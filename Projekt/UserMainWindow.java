@@ -28,6 +28,7 @@ public class UserMainWindow extends JFrame{
     private User currentUser;
     private JFrame frame;
 
+    private short[] codeMessage;
     public UserMainWindow()
     {
         frame=this;
@@ -46,20 +47,23 @@ public class UserMainWindow extends JFrame{
         setNewMessageButton();
         saveButton();
         setAddContactButton();
+        setEncryptionButton();
+        setDecryptionButton();
+        setLogoutButton();
     }
+
+    private void setLogoutButton()
+    {
+        logOutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
+    }
+
     private void setContactList(User u, JList<String> list) {
         setList(u, list);
-        Pair key = new Pair(currentUser.getUserLogin(), "Kot"); // Przykładowa para klucza
-        ArrayList<Message> messages = new ArrayList<>();
-        messages.add(new Message("Przykładowa wiadomość", new Date())); // Dodawanie przykładowej wiadomości do listy
-        GUI.thisGUI().getAppManager().AddMessage(key, messages); // Dodawanie wiadomości do pary
-
-
-        Pair key2 = new Pair("Kot",currentUser.getUserLogin()); // Przykładowa para klucza
-        ArrayList<Message> messages2 = new ArrayList<>();
-        messages2.add(new Message("dupa wiadomość", new Date())); // Dodawanie przykładowej wiadomości do listy
-        GUI.thisGUI().getAppManager().AddMessage(key2, messages2); // Dodawanie wiadomości do pary
-
 
         contactList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -107,7 +111,8 @@ public class UserMainWindow extends JFrame{
                 Message selectedMessage = (Message) messagesList.getSelectedValue();
                 if(selectedMessage.getIsOutcoming())
                 {
-                    messageText.setText(selectedMessage.getContent());
+
+                    messageText.setText(Projekt.IntsToString(selectedMessage.getContent()));
                     messageText.setEditable(false);
                     keyText.setText(selectedMessage.getKey());
                     keyText.setEditable(false);
@@ -141,7 +146,13 @@ public class UserMainWindow extends JFrame{
         encryptionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                short[] intMessage= Projekt.TextToInts(messageText.getText());
+                short[] intKey = Projekt.TextToInts(keyText.getText());
+                //intKey=Projekt.PasswordPepper(intKey);
+                intMessage= Projekt.Vernam(intMessage,intKey,false);
+                intMessage=Projekt.Salting(intMessage,intKey);
+                codeMessage=intMessage;
+                messageText.setText(Projekt.IntsToString(intMessage));
             }
         });
     }
@@ -152,6 +163,12 @@ public class UserMainWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                short[] intMessage= codeMessage;
+                short[] intKey = Projekt.TextToInts(keyText.getText());
+                //intKey=Projekt.PasswordPepper(intKey);
+                intMessage=Projekt.Desalting(intMessage,intKey);
+                intMessage= Projekt.Vernam(intMessage,intKey,true);
+                messageText.setText(Projekt.IntsToString(intMessage));
             }
 
         });
@@ -164,7 +181,7 @@ public class UserMainWindow extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 //Add to database
                 GUI.thisGUI().getAppManager().addSingleMessage(new Pair(currentUser.getUserLogin(),
-                        (String)contactList.getSelectedValue()),messageText.getText(),keyText.getText());
+                        (String)contactList.getSelectedValue()),Projekt.TextToInts(messageText.getText()),keyText.getText());
                 //Change message info
                 RefreshMessageList(contactList);
             }
@@ -186,7 +203,7 @@ public class UserMainWindow extends JFrame{
 
         });
     }
-    
+
     private void setAddContactWindow(ArrayList<User> finalList) {
         JFrame frame = new JFrame("Add New Contact");
         frame.setSize(400, 200);

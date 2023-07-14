@@ -89,7 +89,7 @@ public class AppManager {
         existingMessages.addAll(messagetoadd);
     }
 
-    public void addSingleMessage(Pair p,String messageToAdd,String key) {
+    public void addSingleMessage(Pair p,short[]  messageToAdd,String key) {
         ArrayList<Message> existingMessages = messagesrelation.get(p);
         existingMessages.add(new Message(messageToAdd,new Date()));
     }

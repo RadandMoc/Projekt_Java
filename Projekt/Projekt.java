@@ -1,10 +1,6 @@
 package Projekt;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
-import java.util.LinkedList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Projekt {
     public static void main(String[] args) {
@@ -48,38 +44,23 @@ public class Projekt {
     public static short[] TextToInts(String text)
     {
         int textLength = text.length();
-        short[] secret = new short[textLength*2];
+        ArrayList<Short> secret = new ArrayList<Short>();
         int sizeOfTable = textLength;
         
-        for (int i = 0; i < textLength*2; i++) {
-            secret[i] = CharToInt(text.charAt((i)/2));
-            i++;
-            secret[i] = (short) text.charAt((i)/2);
-            if(secret[i-1]==0)
+        for (int i = 0; i < text.length(); i++) {
+            secret.add(CharToInt(text.charAt(i)));
+            if(secret.indexOf(secret.size())==0)
             {
-                sizeOfTable++;
+                secret.add((short)text.charAt(i));
             }
+
+        }
+        short[] secretArray = new short[secret.size()];
+        for (int i = 0; i < secret.size(); i++) {
+            secretArray[i] = secret.get(i);
         }
 
-        short[] returner = new short[sizeOfTable];
-        int assitant = 0;
-        for (int i = 0; i < sizeOfTable; i++)
-        {
-            if(secret[i]==0)
-            {
-                returner[i] = 0;
-                i++;
-                assitant++;
-                returner[i] = secret[assitant];
-                assitant++;
-            }
-            else
-            {
-                returner[i] = secret[assitant];
-                assitant += 2;
-            }
-        }
-        return returner;
+        return secretArray;
     }
 
     public static String IntsToString(short[] textInInts)
