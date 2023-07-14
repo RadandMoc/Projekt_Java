@@ -4,17 +4,22 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.LinkedList;
+import java.util.Arrays;
 
 public class Projekt {
     public static void main(String[] args) {
-        String tekst = "1234567890qwertyuiopasdfg";
-        short[] text = TextToInts(tekst);
-        String password = "W dupie trzasło";
+        /*String tekst = "1234567890qwertyuiopasdfgqwert '*-*+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
+        short[] text = TextToInts(tekst);*/
+        String password = "a";
         short[] passwordInInt = TextToInts(password);
-        short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
+        /*short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
         zaszyfrowane = Salting(zaszyfrowane, passwordInInt);
         zaszyfrowane = Desalting(zaszyfrowane, passwordInInt);
-        System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));
+        System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));*/
+        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
+        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
+        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
+        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
         /*for (int value : output) {
             System.out.print(value + " ");
         }*/
@@ -335,6 +340,10 @@ public class Projekt {
             return 108;
         } else if(letter == ' '){
             return 107;
+        } else if(letter == '\''){
+            return 109;
+        } else if(letter == '\\'){
+            return 110;
         }
         return 0;
     }
@@ -569,6 +578,10 @@ public class Projekt {
             return ';';
         } else if(number == 107){
             return ' ';
+        } else if(number == 109){
+            return '\'';
+        } else if(number == 110){
+            return '\\';
         }
         return another;
     }
@@ -740,4 +753,124 @@ public class Projekt {
         Random random = new Random();
         return (short)random.nextInt(256);
     }
+
+    public static void IsPrimeWork()
+    {
+        short index = 0;
+        while(index<256)
+        {
+            if(IsPrime(index))
+            {
+                System.out.print(index + " ");
+            }
+            index++;
+        }
+    }
+
+    public static boolean IsPrime(short number) {
+        if (number <= 1) {
+            return false;
+        }
+
+        if (number == 2 || number == 3) {
+            return true;
+        }
+
+        if (number % 2 == 0 || number % 3 == 0) {
+            return false;
+        }
+
+        short divisor = 5;
+        while (divisor * divisor <= number) {
+            if (number % divisor == 0 || number % (divisor + 2) == 0) {
+                return false;
+            }
+            divisor += 6;
+        }
+
+        return true;
+    }
+
+    public static short[] PasswordPepper(short[] password) {
+        short[] array = new short[password.length];
+        int x = 0;
+        for (short s : password) {
+            array[x] = s;
+            x++;
+        }
+        Random random = new Random(Arrays.hashCode(array));
+
+        for (int i = array.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+
+            short temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        x = random.nextInt(20);
+        int textLength = array.length;
+        short[] pepper = new short[textLength*2];
+        int idPepper = 0;
+        for (int i = 0; i < textLength; i++)
+        {
+            if(IsPrime(array[i]) || idPepper == 0)
+            {
+                array[i]=(short)(Math.pow(array[i], 3)%256);
+                pepper[idPepper] = (short)((Math.abs(array[i] * i - x))%256);
+                idPepper++;
+            }
+            else
+            {
+                array[i] = (short)((array[i] * x)%256);
+                x = random.nextInt(100);
+            }
+            array[i] = (short)((array[i]+x)%256);
+            x = random.nextInt(20);
+            if(array[i] % 3 == 0)
+            {
+                pepper[idPepper] = (short)((Math.abs(array[i] * x - Math.pow(array[i]%11, i)))%256);
+                idPepper++;
+            }
+        }
+        short[] returner = new short[textLength + idPepper];
+        int i=0;
+        for (short s : array) {
+            returner[i] = s;
+            i++;
+        }
+        for (short s : pepper) {
+            returner[i] = s;
+            i++;
+            if(returner.length == i)
+            {
+                break;
+            }
+        }
+
+        if(returner.length<20)
+        {
+            i=0;
+            short[] finalReturner = new short[20];
+            for (short s : returner) {
+                finalReturner[i] = s;
+                i++;
+            }
+            for(int j=20-returner.length; j>0; j--)
+            {
+                finalReturner[i] = (short)(random.nextInt(500)%256);
+                i++;
+            }
+            returner = finalReturner;
+        }
+        //Dodac minimalna ilosc znakow zeby wyjsciowe haslo nie bylo nigdy krotsze od 20 znakow. Po takiej zmianie nalezy tablice jeszcze raz przemiksowac
+        for (i = returner.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+
+            short temp = returner[i];
+            returner[i] = returner[j];
+            returner[j] = temp;
+        }
+        return returner;
+    }
+
 }
