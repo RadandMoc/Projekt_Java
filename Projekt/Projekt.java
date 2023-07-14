@@ -660,7 +660,7 @@ public class Projekt {
                     G=RandomCharSize(); //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size(); //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
                     qreturner.offer(G);
-                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%355)+1;
+                    howFarIsSalt = (short)((((Math.pow(G, 2)) + (H*I) + B)%355)+1);
                     numberOfSalts++;
                 }
                 else
@@ -716,7 +716,7 @@ public class Projekt {
                 {    
                     G=text[qreturner.size()+numberOfSalts]; //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size()+numberOfSalts; //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
-                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%355)+1;
+                    howFarIsSalt = (short)((((Math.pow(G, 2)) + (H*I) + B)%355)+1);
                     numberOfSalts++;
                 }
                 else
