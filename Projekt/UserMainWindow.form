@@ -57,38 +57,30 @@
           <text value="Add Contact"/>
         </properties>
       </component>
-      <component id="d8e25" class="javax.swing.JList" binding="list2" default-binding="true">
-        <constraints>
-          <grid row="1" column="2" row-span="5" col-span="1" vsize-policy="6" hsize-policy="2" anchor="8" fill="2" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <vspacer id="81e1b">
         <constraints>
           <grid row="1" column="1" row-span="5" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="81786" class="javax.swing.JButton" binding="button1" default-binding="true">
+      <component id="81786" class="javax.swing.JButton" binding="encryptionButton">
         <constraints>
           <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="123" height="30"/>
           </grid>
         </constraints>
         <properties>
-          <text value="Button"/>
+          <text value="Encryption"/>
         </properties>
       </component>
-      <component id="3271e" class="javax.swing.JButton" binding="button2" default-binding="true">
+      <component id="3271e" class="javax.swing.JButton" binding="decryptionButton" default-binding="true">
         <constraints>
           <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Button"/>
+          <text value="Decryption"/>
         </properties>
       </component>
-      <scrollpane id="86418">
+      <scrollpane id="86418" binding="contactPanel">
         <constraints>
           <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="256" height="436"/>
@@ -100,25 +92,19 @@
           <component id="34ba2" class="javax.swing.JList" binding="contactList">
             <constraints/>
             <properties>
-              <model/>
+              <model>
+                <item value="aa"/>
+              </model>
             </properties>
           </component>
         </children>
       </scrollpane>
-      <component id="1d10d" class="javax.swing.JTextField" binding="textField1" default-binding="true">
-        <constraints>
-          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="4b6e3" class="javax.swing.JButton" binding="button3" default-binding="true">
+      <component id="4b6e3" class="javax.swing.JButton" binding="newMessageButton" default-binding="true">
         <constraints>
           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Button"/>
+          <text value="New message"/>
         </properties>
       </component>
       <hspacer id="c49c1">
@@ -126,7 +112,7 @@
           <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
-      <component id="19a7b" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+      <component id="19a7b" class="javax.swing.JTextField" binding="messageText">
         <constraints>
           <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -134,7 +120,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="65561" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+      <component id="65561" class="javax.swing.JTextField" binding="keyText">
         <constraints>
           <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -147,7 +133,7 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Szyfrowana Wiadomośc"/>
+          <text value="Encrypition"/>
         </properties>
       </component>
       <component id="fb6b9" class="javax.swing.JLabel">
@@ -155,7 +141,27 @@
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Wprowadź Klucz"/>
+          <text value="Set Key"/>
+        </properties>
+      </component>
+      <component id="d8e25" class="javax.swing.JList" binding="messagesList">
+        <constraints>
+          <grid row="1" column="2" row-span="5" col-span="1" vsize-policy="6" hsize-policy="2" anchor="8" fill="2" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <model>
+            <item value="aa"/>
+          </model>
+        </properties>
+      </component>
+      <component id="cd66f" class="javax.swing.JButton" binding="saveButton">
+        <constraints>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Save "/>
         </properties>
       </component>
     </children>

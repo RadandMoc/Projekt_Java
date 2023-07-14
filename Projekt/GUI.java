@@ -23,6 +23,7 @@ public class GUI extends JFrame{
         thisGui=this;
         setSize(350,300);
         setTitle("Zaloguj");
+
         setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
@@ -31,9 +32,9 @@ public class GUI extends JFrame{
 
         appManager=new AppManager();
 
-        appManager.addUser(new User(4,"Kot","Pies","rtot"));
-        appManager.addUser(new User(5,"Kotek","Pies","rtot"));
-        appManager.addUser(new User(6,"Koteczek","Pies","rtot"));
+        appManager.addUser(new User("Kot","Pies","rtot"));
+        appManager.addUser(new User("Kotek","Pies","rtot"));
+        appManager.addUser(new User("Koteczek","Pies","rtot"));
 
 
         logIn.addActionListener(new ActionListener() {

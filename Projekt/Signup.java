@@ -21,7 +21,7 @@ public class Signup extends JFrame{
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User u = new User(0, loginText.getText(), passwordText.getText(), emailText.getText());
+                User u = new User(loginText.getText(), passwordText.getText(), emailText.getText());
                 boolean isAppropiateLength=passwordText.getText().length()>2;
                 if(GUI.thisGUI().getAppManager().checkIfUserIsUnique(u)&&isAppropiateLength)
                 {

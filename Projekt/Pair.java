@@ -3,10 +3,10 @@ package Projekt;
 import java.util.Objects;
 
 public class Pair {
-    private final int first;
-    private final int second;
+    private final String first;
+    private final String second;
 
-    public Pair(int first, int second) {
+    public Pair(String first, String second) {
         this.first = first;
         this.second = second;
     }

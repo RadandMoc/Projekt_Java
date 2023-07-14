@@ -4,14 +4,12 @@ import java.util.HashSet;
 
 public class User {
 
-    private int userId;
     private String login;
     private String password;
     private String email;
     private HashSet<User> contactList;
 
-    public User(int userId,String login,String password,String email) {
-        this.userId=userId;
+    public User(String login,String password,String email) {
         this.login = login;
         this.password = password;
         this.email = email;
@@ -20,7 +18,7 @@ public class User {
 
     @Override
     public String toString() {
-        return userId+login+password+email;
+        return login;
     }
 
     public String getUserLogin()
