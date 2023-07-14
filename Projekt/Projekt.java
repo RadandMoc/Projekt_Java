@@ -4,19 +4,18 @@ import java.util.*;
 
 public class Projekt {
     public static void main(String[] args) {
-        /*String tekst = "1234567890qwertyuiopasdfgqwert '*-*+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
-        short[] text = TextToInts(tekst);*/
+        String tekst = "1234567890qwertyuiopasdfgqwert '*-*+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
+        short[] text = TextToInts(tekst);
         String password = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
         short[] passwordInInt = TextToInts(password);
-        /*passwordInInt = PasswordPepper(passwordInInt);
-        passwordInInt = Salting(passwordInInt, passwordInInt);
+        passwordInInt = PasswordPepper(passwordInInt);
         short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
         zaszyfrowane = Salting(zaszyfrowane, passwordInInt);
         zaszyfrowane = Desalting(zaszyfrowane, passwordInInt);
-        System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));*/
+        System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));
         //System.out.println(IntsToString(PasswordPepper(passwordInInt)));
         //System.out.println(IntsToString(PasswordPepper(passwordInInt)));
-        passwordInInt = PasswordPepper(passwordInInt);
+        /*passwordInInt = PasswordPepper(passwordInInt);
         short[] passwordInInt2 = passwordInInt;
         for (int value : passwordInInt) {
             System.out.print(value + " ");
@@ -27,7 +26,7 @@ public class Projekt {
         passwordInInt = Desalting(passwordInInt, passwordInInt2);
         for (int value : passwordInInt) {
             System.out.print(value + " ");
-        }
+        }*/
         //System.out.println(IntsToString(output));
         //System.out.println(CharToInt(' '));
     }
