@@ -611,7 +611,7 @@ public class Projekt {
             returner[i] = (short)(text[i] - password[i%passwordLength]);
             if(returner[i]<0)
             {
-                returner[i] = (short)(returner[i] * (-1));
+                returner[i] = (short)(returner[i] + 256);
             }
         }
         return returner;
