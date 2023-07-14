@@ -10,19 +10,28 @@ public class Projekt {
     public static void main(String[] args) {
         /*String tekst = "1234567890qwertyuiopasdfgqwert '*-*+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
         short[] text = TextToInts(tekst);*/
-        String password = "a";
+        String password = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
         short[] passwordInInt = TextToInts(password);
-        /*short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
+        /*passwordInInt = PasswordPepper(passwordInInt);
+        passwordInInt = Salting(passwordInInt, passwordInInt);
+        short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
         zaszyfrowane = Salting(zaszyfrowane, passwordInInt);
         zaszyfrowane = Desalting(zaszyfrowane, passwordInInt);
         System.out.print(IntsToString(VernamDecrypting(zaszyfrowane,passwordInInt)));*/
-        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
-        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
-        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
-        System.out.println(IntsToString(PasswordPepper(passwordInInt)));
-        /*for (int value : output) {
+        //System.out.println(IntsToString(PasswordPepper(passwordInInt)));
+        //System.out.println(IntsToString(PasswordPepper(passwordInInt)));
+        passwordInInt = PasswordPepper(passwordInInt);
+        short[] passwordInInt2 = passwordInInt;
+        for (int value : passwordInInt) {
             System.out.print(value + " ");
-        }*/
+        }
+        passwordInInt = Salting(passwordInInt, passwordInInt);
+        
+        System.out.println();
+        passwordInInt = Desalting(passwordInInt, passwordInInt2);
+        for (int value : passwordInInt) {
+            System.out.print(value + " ");
+        }
         //System.out.println(IntsToString(output));
         //System.out.println(CharToInt(' '));
     }
@@ -670,7 +679,7 @@ public class Projekt {
                     G=RandomCharSize(); //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size(); //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
                     qreturner.offer(G);
-                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%356);
+                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%355)+1;
                     numberOfSalts++;
                 }
                 else
@@ -726,7 +735,7 @@ public class Projekt {
                 {    
                     G=text[qreturner.size()+numberOfSalts]; //wartosc ostatniej soli szyfrujacej
                     I=qreturner.size()+numberOfSalts; //teraz zmienna I ma lokalizacje w tablicy pierwszej szyfrujacej(ostatniej) soli
-                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%356);
+                    howFarIsSalt = (short)(((Math.pow(G, 2)) + (H*I) + B)%355)+1;
                     numberOfSalts++;
                 }
                 else
