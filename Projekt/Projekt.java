@@ -4,9 +4,9 @@ import java.util.*;
 
 public class Projekt {
     public static void main(String[] args) {
-        String tekst = "1234567890qwertyuiopasdfgqwert '*-*+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
+        String tekst = "<>1234567890qwertyuiopasdfgqwert| '*-*<>+yuiop[]asdfghjkl;'zxcvbnm,.QWERT YUIOP[ASDFGHJ KL;ZXCVBNM,12345678098765efbjrdfghj]";
         short[] text = TextToInts(tekst);
-        String password = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+        String password = "xd";
         short[] passwordInInt = TextToInts(password);
         passwordInInt = PasswordPepper(passwordInInt);
         short[] zaszyfrowane = VernamEncryption(text, passwordInInt);
@@ -53,15 +53,14 @@ public class Projekt {
     {
         int textLength = text.length();
         ArrayList<Short> secret = new ArrayList<Short>();
-        int sizeOfTable = textLength;
         
-        for (int i = 0; i < text.length(); i++) {
+        for (int i = 0; i < textLength; i++) {
             secret.add(CharToInt(text.charAt(i)));
-            if(secret.get(secret.size())==0)
+            int assist = secret.get(secret.size()-1);
+            if(secret.get(secret.size()-1)==0)
             {
                 secret.add((short)text.charAt(i));
             }
-
         }
         short[] secretArray = new short[secret.size()];
         for (int i = 0; i < secret.size(); i++) {
