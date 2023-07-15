@@ -5,9 +5,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.stream.Collectors;
 
 public class UserMainWindow extends JFrame{
 
@@ -18,8 +17,8 @@ public class UserMainWindow extends JFrame{
     private JList contactList;
     private JButton logOutButton;
     private JButton newMessageButton;
-    private JTextField messageText;
-    private JTextField keyText;
+    private JTextArea messageText;
+    private JTextArea keyText;
     private JLabel usernameLabel;
     private JPanel MainPanel;
     private JScrollPane contactPanel;
@@ -43,6 +42,7 @@ public class UserMainWindow extends JFrame{
         setContentPane(MainPanel);
         usernameLabel.setText(u.getUserLogin());
         setContactList(u,contactList);
+
         setMessages();
         setNewMessageButton();
         saveButton();
@@ -85,10 +85,9 @@ public class UserMainWindow extends JFrame{
 
     private void RefreshMessageList(JList<String> list) {
         String selectedUser = list.getSelectedValue();
-        System.out.println("Wybrano użytkownika: " + selectedUser);
-
         Pair key = new Pair(currentUser.getUserLogin(), selectedUser);
-        ArrayList<Message> messages = GUI.thisGUI().getAppManager().ArrayfindAllIncomingMessage(currentUser.getUserLogin(), selectedUser);
+        ArrayList<Message> messages = GUI.thisGUI().getAppManager().
+                ArrayfindAllIncomingMessage(currentUser.getUserLogin(), selectedUser);
 
         if (messages == null) {
             messages = new ArrayList<>();
@@ -101,6 +100,11 @@ public class UserMainWindow extends JFrame{
         }
 
         messagesList.setModel(model);
+        try {
+            GUI.thisGUI().getAppManager().saveStateToFile("BinarySave.bin");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setMessages(){
@@ -111,7 +115,6 @@ public class UserMainWindow extends JFrame{
                 Message selectedMessage = (Message) messagesList.getSelectedValue();
                 if(selectedMessage.getIsOutcoming())
                 {
-
                     messageText.setText(Projekt.IntsToString(selectedMessage.getContent()));
                     messageText.setEditable(false);
                     keyText.setText(selectedMessage.getKey());
@@ -148,7 +151,7 @@ public class UserMainWindow extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 short[] intMessage= Projekt.TextToInts(messageText.getText());
                 short[] intKey = Projekt.TextToInts(keyText.getText());
-                //intKey=Projekt.PasswordPepper(intKey);
+                intKey=Projekt.PasswordPepper(intKey);
                 intMessage= Projekt.Vernam(intMessage,intKey,false);
                 intMessage=Projekt.Salting(intMessage,intKey);
                 codeMessage=intMessage;
@@ -165,7 +168,7 @@ public class UserMainWindow extends JFrame{
 
                 short[] intMessage= codeMessage;
                 short[] intKey = Projekt.TextToInts(keyText.getText());
-                //intKey=Projekt.PasswordPepper(intKey);
+                intKey=Projekt.PasswordPepper(intKey);
                 intMessage=Projekt.Desalting(intMessage,intKey);
                 intMessage= Projekt.Vernam(intMessage,intKey,true);
                 messageText.setText(Projekt.IntsToString(intMessage));
@@ -199,6 +202,7 @@ public class UserMainWindow extends JFrame{
                 ArrayList<User> finalList = new ArrayList<>(allUsers);
                 finalList.removeAll(userContactList);
                 setAddContactWindow(finalList);
+
             }
 
         });
@@ -230,6 +234,11 @@ public class UserMainWindow extends JFrame{
             }
             setList(currentUser,contactList);
             frame.dispose();
+            try {
+                GUI.thisGUI().getAppManager().saveStateToFile("BinarySave.bin");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         panel.add(confirmButton);
         // Dodajemy panel do ramki i pokazujemy ramkę

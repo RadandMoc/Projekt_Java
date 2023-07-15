@@ -1,10 +1,11 @@
 package Projekt;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class AppManager {
+public class AppManager implements Serializable{
     ArrayList<User> allUser;
     HashMap<Pair,ArrayList<Message>> messagesrelation;
 
@@ -98,5 +99,23 @@ public class AppManager {
     {
         return allUser;
     }
+
+
+    public void saveStateToFile(String filePath) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(this);
+        }
+    }
+
+    public static AppManager loadStateFromFile(String filePath) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (AppManager) ois.readObject();
+        }
+    }
+
+
+
+
+
 
 }

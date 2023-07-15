@@ -1,8 +1,10 @@
 package Projekt;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pair {
+public class Pair implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final String first;
     private final String second;
 

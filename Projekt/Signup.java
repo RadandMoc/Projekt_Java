@@ -3,6 +3,7 @@ package Projekt;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class Signup extends JFrame{
     private JTextField loginText;
@@ -28,8 +29,12 @@ public class Signup extends JFrame{
                     GUI.thisGUI().createUser(u);
                     u.AddContact(GUI.thisGUI().getAppManager().returnUserWithiLogin(0));
                     u.AddContact(GUI.thisGUI().getAppManager().returnUserWithiLogin(1));
-                    System.out.print(u.toString());
                     frame.setVisible(false);
+                    try {
+                        GUI.thisGUI().getAppManager().saveStateToFile("BinarySave.bin");
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 else
                 {

@@ -1,8 +1,9 @@
 package Projekt;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Message {
+public class Message implements Serializable {
     private short[] content;
     private Date date;
     private boolean isOutgoing;

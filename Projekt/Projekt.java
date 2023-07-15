@@ -57,7 +57,7 @@ public class Projekt {
         
         for (int i = 0; i < text.length(); i++) {
             secret.add(CharToInt(text.charAt(i)));
-            if(secret.indexOf(secret.size())==0)
+            if(secret.get(secret.size())==0)
             {
                 secret.add((short)text.charAt(i));
             }

@@ -1,8 +1,9 @@
 package Projekt;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class User {
+public class User implements Serializable {
 
     private String login;
     private String password;

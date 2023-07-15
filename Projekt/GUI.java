@@ -3,6 +3,7 @@ package Projekt;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class GUI extends JFrame{
     private JPanel panel1;
@@ -30,11 +31,15 @@ public class GUI extends JFrame{
         setResizable(false);
         setVisible(true);
 
-        appManager=new AppManager();
 
-        appManager.addUser(new User("Kot","Pies","rtot"));
-        appManager.addUser(new User("Kotek","Pies","rtot"));
-        appManager.addUser(new User("Koteczek","Pies","rtot"));
+
+
+
+        try {
+            appManager = AppManager.loadStateFromFile("BinarySave.bin");
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
 
         logIn.addActionListener(new ActionListener() {
@@ -49,10 +54,6 @@ public class GUI extends JFrame{
                 {
                     JOptionPane.showMessageDialog(null, "wprowadzono login lub hasło jest błędne", "Informacja", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
-            private boolean validPassword() {
-                String password = loginText.getText();
-                return password != null && !password.isEmpty();
             }
         });
         signupButton.addActionListener(new ActionListener() {
