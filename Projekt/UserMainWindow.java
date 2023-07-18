@@ -8,6 +8,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Klasa UserMainWindow dostarcza graficzny interfejs użytkownika do zarządzania operacjami użytkownika w aplikacji czatu.
+ * Umożliwia użytkownikom wysyłanie, odbieranie, szyfrowanie i deszyfrowanie wiadomości, zarządzanie kontaktami oraz wylogowywanie.
+ */
 public class UserMainWindow extends JFrame{
 
     private JButton addContactButton;
@@ -23,17 +27,29 @@ public class UserMainWindow extends JFrame{
     private JPanel MainPanel;
     private JScrollPane contactPanel;
     private JButton saveButton;
+    private JButton removeButton;
 
+    private boolean isMessageExist=false;
     private User currentUser;
     private JFrame frame;
 
+
     private short[] codeMessage;
+
+    /**
+     * Domyślny konstruktor, inicjuje główne okno.
+     */
     public UserMainWindow()
     {
         frame=this;
         setSize(300, 400);
         setVisible(true);
     }
+
+    /**
+     * Przeciążony konstruktor, inicjuje główne okno z danymi użytkownika.
+     * @param u Użytkownik, którego dane są wykorzystywane do inicjalizacji okna.
+     */
 
     public UserMainWindow(User u)
     {
@@ -47,10 +63,15 @@ public class UserMainWindow extends JFrame{
         setNewMessageButton();
         saveButton();
         setAddContactButton();
+        setRemoveButton();
         setEncryptionButton();
         setDecryptionButton();
         setLogoutButton();
     }
+
+    /**
+     * Funkcja do obsługi operacji wylogowania. Zamyka obecne okno po wylogowaniu.
+     */
 
     private void setLogoutButton()
     {
@@ -61,7 +82,11 @@ public class UserMainWindow extends JFrame{
             }
         });
     }
-
+    /**
+     * Funkcja do inicjowania listy kontaktów. Dodaje listenera do obsługi wyboru kontaktu.
+     * @param u Użytkownik, którego lista kontaktów ma być ustawiona.
+     * @param list Lista JList zawierająca kontakty.
+     */
     private void setContactList(User u, JList<String> list) {
         setList(u, list);
 
@@ -75,23 +100,40 @@ public class UserMainWindow extends JFrame{
         });
     }
 
+    /**
+     * Funkcja do wypełniania listy JList kontaktami.
+     * @param u Użytkownik, którego lista kontaktów ma być ustawiona.
+     * @param list JList do wypełnienia kontaktami.
+     */
     private void setList(User u, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (User user : u.getContactList()) {
-            model.addElement(user.getUserLogin());
+
+        try {
+
+            for (User user : u.getContactList()) {
+                model.addElement(user.getUserLogin());
+            }
+            list.setModel(model);
+        } catch (Exception e) {
+            //Donothing
         }
-        list.setModel(model);
     }
+    /**
+     * Funkcja do odświeżania listy wiadomości.
+     * @param list JList zawierająca wiadomości.
+     */
 
     private void RefreshMessageList(JList<String> list) {
         String selectedUser = list.getSelectedValue();
         Pair key = new Pair(currentUser.getUserLogin(), selectedUser);
+        Pair key2 = new Pair(selectedUser,currentUser.getUserLogin());
         ArrayList<Message> messages = GUI.thisGUI().getAppManager().
                 ArrayfindAllIncomingMessage(currentUser.getUserLogin(), selectedUser);
 
         if (messages == null) {
             messages = new ArrayList<>();
             GUI.thisGUI().getAppManager().AddMessage(key, messages);
+            GUI.thisGUI().getAppManager().AddMessage(key2, messages);
         }
 
         DefaultListModel<Message> model = new DefaultListModel<>();
@@ -106,6 +148,11 @@ public class UserMainWindow extends JFrame{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Funkcja do szyfrowania danej wiadomości.
+     * @return Zaszyfrowana wiadomość jako łańcuch znaków.
+     */
 
     private void setMessages(){
         messagesList.addListSelectionListener(new ListSelectionListener() {
@@ -122,15 +169,48 @@ public class UserMainWindow extends JFrame{
                 }
                 else
                 {
-                    messageText.setText("Zaszyfrowane");
+                    messageText.setText(encryption(selectedMessage));
+                    messageText.setEditable(false);
                     keyText.setEditable(true);
                     keyText.setText(null);
                 }
+                isMessageExist=true;
             }
         }
     });
     }
 
+    /**
+     * Funkcja do szyfrowania danej wiadomości.
+     * @param message Wiadomość do zaszyfrowania.
+     * @return Zaszyfrowana wiadomość jako łańcuch znaków.
+     */
+
+    private String encryption(Message message) {
+        short[] intKey = Projekt.TextToInts(message.getKey());
+        intKey=Projekt.PasswordPepper(intKey);
+        short[] intMessage = message.getContent();
+        intMessage= Projekt.Vernam(intMessage,intKey,false);
+        intMessage=Projekt.Salting(intMessage,intKey);
+        return Projekt.IntsToString(intMessage);
+    }
+    /**
+     * Funkcja do szyfrowania danej wiadomości i zwrócenia wyniku jako tablicy liczb typu short.
+     * @param message Wiadomość do zaszyfrowania.
+     * @return Zaszyfrowana wiadomość jako tablica liczb typu short.
+     */
+    private short[] intEncryption(Message message) {
+        short[] intKey = Projekt.TextToInts(message.getKey());
+        intKey=Projekt.PasswordPepper(intKey);
+        short[] intMessage = message.getContent();
+        intMessage= Projekt.Vernam(intMessage,intKey,false);
+        intMessage=Projekt.Salting(intMessage,intKey);
+        return intMessage;
+    }
+
+    /**
+     * Funkcja do obsługi tworzenia nowych wiadomości.
+     */
     private void setNewMessageButton()
     {
         newMessageButton.addActionListener(new ActionListener() {
@@ -140,9 +220,14 @@ public class UserMainWindow extends JFrame{
                 messageText.setEditable(true);
                 keyText.setText(null);
                 messageText.setText(null);
+                isMessageExist=false;
             }
         });
     }
+
+    /**
+            * Funkcja do obsługi szyfrowania wiadomości.
+     */
 
     private void setEncryptionButton()
     {
@@ -159,14 +244,22 @@ public class UserMainWindow extends JFrame{
             }
         });
     }
-
+    /**
+     * Funkcja do obsługi deszyfrowania wiadomości.
+     */
     private void setDecryptionButton()
     {
         decryptionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                short[] intMessage= codeMessage;
+                short[] intMessage = new short[1];
+                if(isMessageExist)
+                {
+                    intMessage=intEncryption((Message) messagesList.getSelectedValue());
+                }
+                else {
+                    intMessage = codeMessage;
+                }
                 short[] intKey = Projekt.TextToInts(keyText.getText());
                 intKey=Projekt.PasswordPepper(intKey);
                 intMessage=Projekt.Desalting(intMessage,intKey);
@@ -177,20 +270,28 @@ public class UserMainWindow extends JFrame{
         });
     }
 
+    /**
+     * Funkcja do obsługi operacji zapisu. Dodaje utworzoną wiadomość do bazy danych.
+     */
     private void saveButton()
     {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Add to database
+                if(!isMessageExist){
                 GUI.thisGUI().getAppManager().addSingleMessage(new Pair(currentUser.getUserLogin(),
                         (String)contactList.getSelectedValue()),Projekt.TextToInts(messageText.getText()),keyText.getText());
                 //Change message info
                 RefreshMessageList(contactList);
+                }
+
             }
         });
     }
-
+    /**
+     * Funkcja do obsługi dodawania nowych kontaktów.
+     */
     private void setAddContactButton()
     {
         addContactButton.addActionListener(new ActionListener() {
@@ -208,6 +309,29 @@ public class UserMainWindow extends JFrame{
         });
     }
 
+    private void setRemoveButton()
+    {
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = contactList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    String removeLogin = (String) contactList.getSelectedValue();
+                    User removeUser = currentUser.findUserByLogin(removeLogin);
+                    if (removeUser != null) {
+                        currentUser.getContactList().remove(removeUser);
+                    }
+                    ((DefaultListModel) contactList.getModel()).remove(selectedIndex);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Funkcja do tworzenia nowego okna do dodawania kontaktów.
+     * @param finalList Lista kontaktów do dodania.
+     */
     private void setAddContactWindow(ArrayList<User> finalList) {
         JFrame frame = new JFrame("Add New Contact");
         frame.setSize(400, 200);
@@ -223,7 +347,9 @@ public class UserMainWindow extends JFrame{
         JButton addButton = new JButton("Dodaj");
         addButton.addActionListener(e -> {
             User selectedUser=(User)comboBox.getSelectedItem();
-            contactToAdd.add(selectedUser);
+            if(selectedUser!=null){
+                contactToAdd.add(selectedUser);
+            }
         });
         panel.add(addButton);
         JButton confirmButton = new JButton("Zatwierdź");
@@ -232,7 +358,9 @@ public class UserMainWindow extends JFrame{
                  ) {
                 currentUser.AddContact(u);
             }
+            if(currentUser!=null){
             setList(currentUser,contactList);
+            }
             frame.dispose();
             try {
                 GUI.thisGUI().getAppManager().saveStateToFile("BinarySave.bin");

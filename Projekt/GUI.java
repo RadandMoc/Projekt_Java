@@ -14,10 +14,15 @@ public class GUI extends JFrame{
     private JTextField passwordText;
     private JButton signupButton;
     private JFrame frame;
-    private AppManager appManager;
+    private AppData appData;
 
     private static GUI thisGui;
 
+
+    /**
+     * Konstruktor GUI. Inicjuje interfejs graficzny i ładuje stan aplikacji z pliku.
+     * W przypadku błędów podczas ładowania stanu, rzuca wyjątkiem RuntimeException.
+     */
 
     public GUI() {
         // Przykład inicjalizacji komponentów (Możesz dostosować według swoich potrzeb)
@@ -32,20 +37,30 @@ public class GUI extends JFrame{
         setVisible(true);
 
 
+        appData=new AppData();
 
 
 
         try {
-            appManager = AppManager.loadStateFromFile("BinarySave.bin");
+          appData.saveStateToFile("BinarySave.bin");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+/*
+        try {
+            appData = AppData.loadStateFromFile("BinarySave.bin");
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+*/
 
 
         logIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User u = appManager.findUser(loginText.getText(), passwordText.getText());
+                User u = appData.findUser(loginText.getText(), passwordText.getText());
                 if(u!=null)
                 {
                     UserMainWindow userMainWindow = new UserMainWindow(u);
@@ -65,26 +80,41 @@ public class GUI extends JFrame{
        });
     }
 
+    /**
+     * Główna metoda aplikacji. Tworzy nowy interfejs GUI.
+     * @param args Parametry wiersza poleceń (nieużywane).
+     */
     public static void main(String[] args) {
         GUI g = new GUI();
     }
 
+    /**
+     * Zwraca aktualną instancję GUI.
+     * @return Aktualna instancja GUI.
+     */
     public static GUI thisGUI()
     {
         return thisGui;
     }
+    /**
+     * Dodaje nowego użytkownika do AppManager.
+     * @param u Obiekt użytkownika do dodania.
+     */
     public void createUser(User u)
     {
-        appManager.addUser(u);
+        appData.addUser(u);
     }
-
-    public AppManager getAppManager()
+    /**
+     * Zwraca instancję AppManager.
+     * @return Instancja AppManager.
+     */
+    public AppData getAppManager()
     {
-        return appManager;
+        return appData;
     }
-
-
-
+    /**
+     * Tworzy komponenty interfejsu użytkownika. Wszystkie niestandardowe komponenty powinny być tworzone tutaj.
+     */
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
