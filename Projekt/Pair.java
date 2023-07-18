@@ -33,13 +33,14 @@ public class Pair implements Serializable {
      * @return zwraca prawdę, jeśli obiekty są równe, w przeciwnym razie fałsz
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pair pair = (Pair) o;
-        return first.equals(pair.first) &&
-                second.equals(pair.second);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Pair pair = (Pair) obj;
+        if (first != null ? !first.equals(first) : first != null) return false;
+        return second != null ? second.equals(second) : second == null;
     }
+
 
     /**
      * Metoda hashCode zwraca hashcode obiektu, który jest wykorzystywany przy przechowywaniu obiektu w strukturach

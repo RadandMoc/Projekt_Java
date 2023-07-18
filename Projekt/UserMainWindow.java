@@ -54,10 +54,11 @@ public class UserMainWindow extends JFrame{
     public UserMainWindow(User u)
     {
         this();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         currentUser=u;
         setContentPane(MainPanel);
         usernameLabel.setText(u.getUserLogin());
-        setContactList(u,contactList);
+
 
         setMessages();
         setNewMessageButton();
@@ -67,6 +68,7 @@ public class UserMainWindow extends JFrame{
         setEncryptionButton();
         setDecryptionButton();
         setLogoutButton();
+        setContactList(u,contactList);
     }
 
     /**
@@ -318,10 +320,17 @@ public class UserMainWindow extends JFrame{
                 if (selectedIndex != -1) {
                     String removeLogin = (String) contactList.getSelectedValue();
                     User removeUser = currentUser.findUserByLogin(removeLogin);
+
+                    ((DefaultListModel) contactList.getModel()).remove(selectedIndex);
                     if (removeUser != null) {
                         currentUser.getContactList().remove(removeUser);
                     }
-                    ((DefaultListModel) contactList.getModel()).remove(selectedIndex);
+
+                }
+                try {
+                    GUI.thisGUI().getAppManager().saveStateToFile("BinarySave.Bin");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });

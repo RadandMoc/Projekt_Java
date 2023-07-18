@@ -36,7 +36,7 @@ public class GUI extends JFrame{
         setResizable(false);
         setVisible(true);
 
-
+/*
         appData=new AppData();
 
 
@@ -46,15 +46,15 @@ public class GUI extends JFrame{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+*/
 
 
-/*
         try {
             appData = AppData.loadStateFromFile("BinarySave.bin");
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-*/
+
 
 
         logIn.addActionListener(new ActionListener() {
