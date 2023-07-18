@@ -32,7 +32,8 @@ public class Projekt {
     }
 
 
-/* Mechanika zdefiniowania znaku:
+/* Zmiana tekstu w tablicę shortów
+ * Mechanika zdefiniowania znaku:
  * 1 jeżeli znak jest przez nas zdefiniowany to jest tam int odpowiadający znakowi z naszego słownika
  * 2 jeśli znak nie jest przez nas zdefiniowany to w jego miejscu jest 0 a następna liczba jest intem z kodu ascii odpowiadającym temu znakowi
  * 
@@ -70,6 +71,9 @@ public class Projekt {
         return secretArray;
     }
 
+    /*
+     * Zmiana tablicy shortów w tekst
+    */
     public static String IntsToString(short[] textInInts)
     {
         int textLength2 = textInInts.length;
@@ -98,6 +102,9 @@ public class Projekt {
     }
 
 
+    /* 
+     * Zmiana znaku w short
+     */
     public static short CharToInt(char letter)
     {
         if(Character.isLetter(letter)){
@@ -336,6 +343,9 @@ public class Projekt {
         return 0;
     }
 
+    /*
+     * Zmiana shortu w char. Jesli wprowadzony short jest spoza slownika to zwraca char another
+     */
     public static char IntToChar(short number, char another)
     {
         if(number > 0 && number < 71){
@@ -575,6 +585,9 @@ public class Projekt {
     }
 
 
+    /*
+     * Funkcja zbiorcza deszyfracji i szyfracji w stylu vernama. Bool jeśli będzie true, to spowoduje, że funkcja zdeszyfruje tekst
+     */
     public static short[] Vernam(short[] text, short[] password, boolean wantDecrypt)
     {
         if(wantDecrypt)
@@ -587,6 +600,9 @@ public class Projekt {
         }
     }
 
+    /*
+     * Szyfracja w stylu Vernama
+     */
     public static short[] VernamEncryption(short[] text, short[] password)
     {
         int textLength = text.length;
@@ -599,6 +615,9 @@ public class Projekt {
         return returner;
     }
 
+    /*
+     * Deszyfracja w stylu Vernama
+     */
     public static short[] VernamDecrypting(short[] text, short[] password)
     {
         int textLength = text.length;
@@ -616,10 +635,7 @@ public class Projekt {
     }
 
 /*
- * Schemat solenia:
- * 
- * 1 Sprawdzenie czy solona tresc jest wystarczajaco duza zeby bylo to z sensem (24 liczb)
- * Patrz na miro
+ * Funkcja komplikujaca deszyfracje. Dodaje losowe wartosci w czesciowo losowych miejscach
  */
     public static short[] Salting(short[] text, short[] password)
     {
@@ -680,6 +696,9 @@ public class Projekt {
         }
     }
 
+    /*
+     * Funkcja usuwajaca te losowe wartosci
+     */
     public static short[] Desalting(short[] text, short[] password)
     {
         int textLength = text.length;
@@ -736,12 +755,18 @@ public class Projekt {
         }
     }
 
+    /*
+     * Funkcja zwracajaca wartosci od 0 do 255 wlacznie
+     */
     public static short RandomCharSize()
     {
         Random random = new Random();
         return (short)random.nextInt(256);
     }
 
+    /*
+     * funkcja prowizorycznego testu sprawdzajaca czy funkcja IsPrime dziala
+     */
     public static void IsPrimeWork()
     {
         short index = 0;
@@ -755,6 +780,9 @@ public class Projekt {
         }
     }
 
+    /*
+     * Funkcja sprawdza, czy wprowadzona liczba jest liczba pierwsza
+     */
     public static boolean IsPrime(short number) {
         if (number <= 1) {
             return false;
@@ -779,6 +807,10 @@ public class Projekt {
         return true;
     }
 
+    /*
+     * Funkcja mielaca otrzymany tekst w formie tablicy shortow. Zwraca mocno wymieszana kombinacje wraz z pseudolosowymi znakami.
+     * UWAGA: Uzycie tej funkcji zawsze zwraca ta sama wartosc wprowadzajac jedna i konkretna wartosc.
+     */
     public static short[] PasswordPepper(short[] password) {
         short[] array = new short[password.length];
         int x = 0;
@@ -850,7 +882,7 @@ public class Projekt {
             }
             returner = finalReturner;
         }
-        //Dodac minimalna ilosc znakow zeby wyjsciowe haslo nie bylo nigdy krotsze od 20 znakow. Po takiej zmianie nalezy tablice jeszcze raz przemiksowac
+        
         for (i = returner.length - 1; i > 0; i--) {
             int j = random.nextInt(i + 1);
 
